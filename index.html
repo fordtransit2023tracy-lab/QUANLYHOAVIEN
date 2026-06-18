@@ -60,11 +60,12 @@
 </head>
 <body>
 
+    <!-- MÀN HÌNH ĐĂNG NHẬP -->
     <div id="loginSection" class="container" style="max-width: 500px; margin-top: 50px;">
         <div class="card p-4 shadow mb-4 text-center bg-white">
             <i class="bi bi-flower2 text-success" style="font-size: 3rem;"></i>
             <h4 class="mt-2 fw-bold text-success">LIÊN MINH HOA VIÊN</h4>
-            <p class="text-muted small mb-0">Đồng bộ Hội - Quản lý hoa viên của bạn</p>
+            <p class="text-muted small mb-0"> Quản lý hoa viên của Bạn </p>
         </div>
 
         <div class="row g-3">
@@ -107,6 +108,7 @@
         </div>
     </div>
 
+    <!-- GIAO DIỆN ADMIN TỐI CAO -->
     <div id="superAdminSection" class="d-none">
         <nav class="navbar navbar-dark bg-super-admin sticky-top shadow-sm">
             <div class="container">
@@ -196,6 +198,7 @@
         </div>
     </div>
 
+    <!-- GIAO DIỆN TRONG HỘI NHÓM -->
     <div id="mainSection" class="d-none">
         <nav class="navbar navbar-dark bg-gradient-premium sticky-top shadow-sm">
             <div class="container">
@@ -210,7 +213,7 @@
         <div class="container-fluid px-2 mt-4">
             <ul class="nav nav-pills nav-fill gap-2 p-1 bg-white rounded-pill shadow-sm mb-4" style="max-width: 750px; margin: 0 auto;" id="clanTabHeader" role="tablist">
                 <li class="nav-item">
-                    <button class="nav-link active rounded-pill" id="tab-stats-btn" data-bs-toggle="pill" data-bs-target="#panel-stats" type="button" onclick="renderStats()"><i class="bi bi-grid-3x3-gap-fill me-1"></i> Danh Sách Hoa </button>
+                    <button class="nav-link active rounded-pill" id="tab-stats-btn" data-bs-toggle="pill" data-bs-target="#panel-stats" type="button" onclick="renderStats()"><i class="bi bi-grid-3x3-gap-fill me-1"></i> Danh Sách Hoa viên của Hội</button>
                 </li>
                 <li class="nav-item">
                     <button class="nav-link rounded-pill" id="tab-myflower-btn" data-bs-toggle="pill" data-bs-target="#panel-myflower" type="button" onclick="initMyFlowerSelection()"><i class="bi bi-check2-circle me-1"></i> Hoa Tôi Sở Hữu</button>
@@ -221,10 +224,12 @@
             </ul>
 
             <div class="tab-content">
+                <!-- TAB 1: HIỂN THỊ DẠNG LƯỚI -->
                 <div class="tab-pane fade show active" id="panel-stats" role="tabpanel">
                     <div class="flower-container-centered">
                         <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3 px-1">
-                            <h5 class="fw-bold text-success mb-0"><i class="bi bi-flower3"></i> KHÔNG GIAN HOA VIÊN CỦA TRONG HỘI</h5>
+                            <h5 class="fw-bold text-success mb-0"><i class="bi bi-flower3"></i> KHÔNG GIAN HOA VIÊN SỞ HỮU TRONG HỘI</h5>
+                            <!-- Thanh tìm kiếm hoa trên lưới -->
                             <div class="input-group input-group-sm" style="max-width: 300px;">
                                 <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-success"></i></span>
                                 <input type="text" id="gridSearchFlower" class="form-control border-start-0" placeholder="Tìm tên hoa trong hội sở hữu..." oninput="renderStats()">
@@ -237,6 +242,7 @@
                     </div>
                 </div>
 
+                <!-- TAB 2: HOA TÔI SỞ HỮU -->
                 <div class="tab-pane fade" id="panel-myflower" role="tabpanel">
                     <div class="card p-4" style="max-width: 650px; margin: 0 auto;">
                         <div>
@@ -255,6 +261,7 @@
                     </div>
                 </div>
 
+                <!-- TAB 3: ĐIỀU HÀNH HỘI VIÊN -->
                 <div class="tab-pane fade id-leader-only" id="panel-members" role="tabpanel">
                     <div class="row g-4" style="max-width: 1300px; margin: 0 auto;">
                         <div class="col-md-4">
@@ -316,14 +323,32 @@
         const SUPER_ADMIN_PHONE = "0999999999";
         let globalBase64Image = "";
 
-        let DB = JSON.parse(localStorage.getItem('HOI_VIEN_DATA_SECURE_2026')) || {
-            groups: {},
-            members: {},
+        // NẠP SẴN DỮ LIỆU MẶC ĐỊNH TRỰC TIẾP VÀO CODE (Bao gồm dữ liệu của bạn để các bạn khác vào link nhận ngay mà không bị trống)
+        const DEFAULT_DATABASE = {
+            groups: {
+                "G_DEFAULT_1": { name: "Hội Mẫu Đơn Sài Gòn" },
+                "G_DEFAULT_2": { name: "Hội Sưu Tầm Thạch Thảo" }
+            },
+            members: {
+                "G_DEFAULT_1": [
+                    { id: 10001, name: "Nguyễn Minh Tâm", phone: "0912345678", role: "Hội trưởng", ownedFlowers: ["FL_1"] },
+                    { id: 10002, name: "Trần Thu Hà", phone: "0987654321", role: "Thành viên", ownedFlowers: ["FL_1", "FL_2"] }
+                ],
+                "G_DEFAULT_2": [
+                    { id: 20001, name: "Phạm Quốc Bảo", phone: "0909998887", role: "Hội trưởng", ownedFlowers: ["FL_2"] }
+                ]
+            },
             globalFlowers: [
                 { id: "FL_1", name: "Mẫu Đơn Đỏ Cao Cấp", img: "https://images.unsplash.com/photo-1561181286-d3fee7d55364?w=400", tier: "Hoa phẩm đỏ" },
                 { id: "FL_2", name: "Cúc Đại Đóa Cam", img: "https://images.unsplash.com/photo-1507290439931-a8e92389c6ca?w=400", tier: "Hoa phẩm cam" }
             ]
         };
+
+        // Nếu máy người dùng chưa từng có dữ liệu, hệ thống sẽ tự nạp DEFAULT_DATABASE cố định này để hiển thị ngay lập tức.
+        let DB = JSON.parse(localStorage.getItem('HOI_VIEN_DATA_SECURE_2026'));
+        if (!DB || !DB.groups || Object.keys(DB.groups).length === 0) {
+            DB = DEFAULT_DATABASE;
+        }
 
         let currentUser = null;
         let currentGroupId = null;
@@ -343,7 +368,7 @@
         }
 
         function clearSystemData() {
-            if(confirm("Xóa toàn bộ dữ liệu lỗi để làm sạch bộ nhớ hệ thống?")) {
+            if(confirm("Xóa toàn bộ dữ liệu hiện tại để đưa hệ thống về trạng thái cài đặt gốc mặc định?")) {
                 localStorage.removeItem('HOI_VIEN_DATA_SECURE_2026');
                 location.reload();
             }
@@ -395,6 +420,7 @@
             const fileInput = document.getElementById('fFile');
             const preview = document.getElementById('fPreview');
 
+            if(!zone) return;
             zone.addEventListener('click', () => fileInput.click());
             fileInput.addEventListener('change', function(e) {
                 if(e.target.files && e.target.files[0]) readImg(e.target.files[0]);
@@ -613,7 +639,6 @@
                 const matchesKeyword = f.name.toLowerCase().includes(keyword);
                 const ownersCount = members.filter(m => m.ownedFlowers && m.ownedFlowers.includes(f.id)).length;
                 
-                // Điều kiện quyết định: Phải có tên khớp từ khóa VÀ số người sở hữu > 0
                 return matchesKeyword && ownersCount > 0;
             });
 
@@ -642,7 +667,6 @@
                     </div>`;
             });
 
-            // Hiển thị thông báo nếu không tìm thấy hoặc chưa có ai có hoa nào
             if(filteredAndOwnedFlowers.length === 0) {
                 container.innerHTML = `
                     <div class="col-12 text-center text-muted py-5">
