@@ -12,7 +12,6 @@
         .bg-gradient-premium { background: linear-gradient(135deg, #1e4620 0%, #0f2a12 100%); color: white; }
         .card { border: none; box-shadow: 0 4px 20px rgba(0,0,0,0.05); border-radius: 12px; }
         
-        /* Cấu trúc lưới hoa mới */
         .flower-grid-card { border: 1px solid #e0e0e0; border-radius: 12px; overflow: hidden; background: #fff; transition: transform 0.2s, box-shadow 0.2s; height: 100%; display: flex; flex-direction: column; }
         .flower-grid-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
         .flower-grid-img { width: 100%; height: 160px; object-fit: cover; background: #eee; }
@@ -29,7 +28,7 @@
         .badge-cam { background-color: #f57c00; color: white; }
         .badge-tim { background-color: #7b1fa2; color: white; }
 
-        .paste-zone { border: 2px dashed #ccc; padding: 15px; text-align: center; background: #fafafa; border-radius: 8px; cursor: pointer; transition: 0.3s; }
+        .paste-zone { border: 2px dashed #ccc; padding: 10px; text-align: center; background: #fafafa; border-radius: 8px; cursor: pointer; transition: 0.3s; }
         .paste-zone:hover { border-color: #198754; background: #f1f9f5; }
         .preview-img { max-width: 80px; max-height: 80px; object-fit: cover; border-radius: 5px; display: none; margin: 10px auto 0; }
     </style>
@@ -39,8 +38,8 @@
     <div id="loginSection" class="container" style="max-width: 500px; margin-top: 50px;">
         <div class="card p-4 shadow mb-4 text-center bg-white">
             <i class="bi bi-flower2 text-success" style="font-size: 3rem;"></i>
-            <h4 class="mt-2 fw-bold text-success">LIÊN MINH HOA VIÊN V3</h4>
-            <p class="text-muted small mb-0">Giao diện dạng lưới trực quan - Quyền Hội trưởng tối ưu</p>
+            <h4 class="mt-2 fw-bold text-success">LIÊN MINH HOA VIÊN</h4>
+            <p class="text-muted small mb-0">Tối ưu dung lượng lưu trữ - Không giới hạn danh mục hoa</p>
         </div>
 
         <div class="row g-3">
@@ -49,7 +48,7 @@
                     <h6 class="fw-bold text-primary mb-1"><i class="bi bi-cpu-fill"></i> ADMIN TỐI CAO</h6>
                     <form id="superLoginForm" class="row g-2">
                         <div class="col-8">
-                            <input type="tel" id="superPhone" class="form-control form-control-sm" placeholder="VD 000000000" required>
+                            <input type="tel" id="superPhone" class="form-control form-control-sm" placeholder="000000000" required>
                         </div>
                         <div class="col-4">
                             <button type="submit" class="btn btn-primary btn-sm w-100 fw-bold">Vào Quản Trị</button>
@@ -79,6 +78,7 @@
         <div class="text-center mt-4">
             <button class="btn btn-sm btn-outline-secondary rounded-pill shadow-sm" onclick="exportDataSystem()"><i class="bi bi-download"></i> Tải dữ liệu dự phòng</button>
             <button class="btn btn-sm btn-outline-secondary rounded-pill shadow-sm ms-2" onclick="importDataSystem()"><i class="bi bi-upload"></i> Nạp dữ liệu</button>
+            <button class="btn btn-sm btn-outline-danger rounded-pill shadow-sm d-block mx-auto mt-2" onclick="clearSystemData()"><i class="bi bi-trash"></i> Xóa dữ liệu lỗi/tràn bộ nhớ</button>
         </div>
     </div>
 
@@ -115,13 +115,25 @@
                                 <option value="Hoa phẩm cam">Hoa phẩm cam</option>
                                 <option value="Hoa phẩm tím">Hoa phẩm tím</option>
                             </select>
-                            <div class="paste-zone" id="imagePasteZone">
-                                <i class="bi bi-images fs-3 text-muted"></i>
-                                <div class="small text-muted">Ctrl+V hoặc click chọn ảnh</div>
-                                <input type="file" id="fFile" class="form-control form-control-sm d-none" accept="image/*">
+                            
+                            <div class="mb-2">
+                                <label class="form-label small fw-bold mb-0 text-success">Cách 1: Nhập liên kết (URL) ảnh mạng (Khuyên dùng để không lo giới hạn)</label>
+                                <input type="url" id="fUrl" class="form-control form-control-sm" placeholder="https://vi.wikipedia.org/logo.png..." oninput="previewUrlImage(this.value)">
                             </div>
+                            
+                            <div class="text-center my-1 small text-muted fw-bold">--- HOẶC ---</div>
+
+                            <div class="mb-2">
+                                <label class="form-label small fw-bold mb-0 text-secondary">Cách 2: Dán/Chọn file ảnh từ máy (Yêu cầu ảnh dung lượng thấp)</label>
+                                <div class="paste-zone" id="imagePasteZone">
+                                    <i class="bi bi-images fs-4 text-muted"></i>
+                                    <div style="font-size: 0.75rem" class="text-muted">Ctrl+V hoặc click để chọn file ảnh</div>
+                                    <input type="file" id="fFile" class="form-control form-control-sm d-none" accept="image/*">
+                                </div>
+                            </div>
+
                             <img id="fPreview" class="preview-img">
-                            <button type="submit" class="btn btn-success btn-sm w-100 fw-bold mt-3">Thêm Vào Kho</button>
+                            <button type="submit" class="btn btn-success btn-sm w-100 fw-bold mt-2">Thêm Vào Kho Hệ Thống</button>
                         </form>
                     </div>
                 </div>
@@ -221,7 +233,7 @@
                                 <h6 class="fw-bold text-warning mb-1"><i class="bi bi-pencil-square"></i> Cấp Hoa Hộ Hội Viên</h6>
                                 <p class="text-muted small mb-2">Đang chỉnh sửa: <strong id="assignTargetName" class="text-dark">...</strong></p>
                                 <input type="hidden" id="assignTargetPhone" value="">
-                                <div id="leaderAssignList" class="d-flex flex-column gap-1 max-height: 300px; overflow-y: auto; mb-3"></div>
+                                <div id="leaderAssignList" class="d-flex flex-column gap-1 mb-3" style="max-height: 300px; overflow-y: auto;"></div>
                                 <div class="d-flex gap-2">
                                     <button class="btn btn-warning btn-sm flex-grow-1 fw-bold" onclick="saveLeaderAssignment()">Lưu Thay Đổi Hộ</button>
                                     <button class="btn btn-secondary btn-sm" onclick="cancelLeaderAssignment()">Hủy</button>
@@ -246,15 +258,15 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        const SUPER_ADMIN_PHONE = "9090909090";
+        const SUPER_ADMIN_PHONE = "0909090909";
         let globalBase64Image = "";
 
         let DB = JSON.parse(localStorage.getItem('HOI_VIEN_DATA_SECURE_2026')) || {
             groups: {},
             members: {},
             globalFlowers: [
-                { id: "FL_1", name: "Mẫu Đơn Đỏ Cao Cấp", img: "https://placehold.co/300x200/ffebee/d32f2f?text=Hoa+Do", tier: "Hoa phẩm đỏ" },
-                { id: "FL_2", name: "Cúc Đại Đóa Cam", img: "https://placehold.co/300x200/fff3e0/f57c00?text=Hoa+Cam", tier: "Hoa phẩm cam" }
+                { id: "FL_1", name: "Mẫu Đơn Đỏ Cao Cấp", img: "https://images.unsplash.com/photo-1561181286-d3fee7d55364?w=400", tier: "Hoa phẩm đỏ" },
+                { id: "FL_2", name: "Cúc Đại Đóa Cam", img: "https://images.unsplash.com/photo-1507290439931-a8e92389c6ca?w=400", tier: "Hoa phẩm cam" }
             ]
         };
 
@@ -268,7 +280,29 @@
         };
 
         function saveData() {
-            localStorage.setItem('HOI_VIEN_DATA_SECURE_2026', JSON.stringify(DB));
+            try {
+                localStorage.setItem('HOI_VIEN_DATA_SECURE_2026', JSON.stringify(DB));
+            } catch (e) {
+                alert("CẢNH BÁO: Không thể lưu thêm hoa! Hình ảnh bạn vừa dán quá nặng làm tràn bộ nhớ trình duyệt. Vui lòng chuyển sang dùng 'Cách 1: Nhập liên kết (URL) ảnh mạng'!");
+            }
+        }
+
+        function clearSystemData() {
+            if(confirm("Xóa toàn bộ dữ liệu lỗi để làm sạch bộ nhớ hệ thống? Bạn sẽ cần khởi tạo lại các Hội.")) {
+                localStorage.removeItem('HOI_VIEN_DATA_SECURE_2026');
+                location.reload();
+            }
+        }
+
+        function previewUrlImage(url) {
+            const preview = document.getElementById('fPreview');
+            if(url.trim() !== "") {
+                preview.src = url;
+                preview.style.display = "block";
+                globalBase64Image = ""; // Clear base64 if url is set
+            } else {
+                preview.style.display = "none";
+            }
         }
 
         function buildGroupSelectOptions() {
@@ -321,12 +355,12 @@
                     globalBase64Image = evt.target.result;
                     preview.src = globalBase64Image;
                     preview.style.display = "block";
+                    document.getElementById('fUrl').value = ""; // Clear URL if file is pasted
                 };
                 r.readAsDataURL(file);
             }
         }
 
-        // ADMIN TỐI CAO XỬ LÝ
         document.getElementById('superLoginForm').addEventListener('submit', function(e) {
             e.preventDefault();
             if(document.getElementById('superPhone').value.trim() === SUPER_ADMIN_PHONE) {
@@ -408,7 +442,7 @@
         }
 
         window.deleteGroupData = function(id) {
-            if (confirm(`Xóa hoàn toàn hội "${DB.groups[id].name}" và toàn bộ thành viên đi kèm?`)) {
+            if (confirm(`Xóa hoàn toàn hội "${DB.groups[id].name}"?`)) {
                 delete DB.groups[id]; delete DB.members[id];
                 saveData(); buildGroupSelectOptions(); renderSuperAdminTable();
             }
@@ -416,10 +450,29 @@
 
         document.getElementById('addFlowerForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            if(!globalBase64Image) return alert('Vui lòng thêm ảnh!');
-            DB.globalFlowers.push({ id: "FL_" + Date.now(), name: document.getElementById('fName').value.trim(), img: globalBase64Image, tier: document.getElementById('fTier').value });
-            saveData(); renderSuperAdminFlowers(); this.reset();
-            globalBase64Image = ""; document.getElementById('fPreview').style.display = "none";
+            const urlValue = document.getElementById('fUrl').value.trim();
+            let finalImg = "";
+
+            if(urlValue !== "") {
+                finalImg = urlValue;
+            } else if(globalBase64Image !== "") {
+                finalImg = globalBase64Image;
+            } else {
+                return alert('Vui lòng chọn 1 trong 2 cách: Nhập link ảnh mạng HOẶC dán file ảnh!');
+            }
+
+            DB.globalFlowers.push({ 
+                id: "FL_" + Date.now(), 
+                name: document.getElementById('fName').value.trim(), 
+                img: finalImg, 
+                tier: document.getElementById('fTier').value 
+            });
+            
+            saveData(); 
+            renderSuperAdminFlowers(); 
+            this.reset();
+            globalBase64Image = ""; 
+            document.getElementById('fPreview').style.display = "none";
         });
 
         function renderSuperAdminFlowers() {
@@ -438,7 +491,6 @@
             }
         }
 
-        // THÀNH VIÊN VÀ HỘI TRƯỞNG ĐĂNG NHẬP
         document.getElementById('userLoginForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const gId = document.getElementById('loginGroup').value;
@@ -468,7 +520,6 @@
             document.getElementById('superLoginForm').reset(); document.getElementById('userLoginForm').reset();
         }
 
-        // YÊU CẦU 1: THIẾT KẾ DANH SÁCH HOA DẠNG LƯỚI TRỰC QUAN
         window.renderStats = function() {
             const container = document.getElementById('flowerGridContainer'); container.innerHTML = '';
             const members = DB.members[currentGroupId] || [];
@@ -481,13 +532,11 @@
                     <div class="col-6 col-md-4 col-lg-3">
                         <div class="flower-grid-card ${cfg.class}">
                             <img src="${f.img}" class="flower-grid-img" alt="${f.name}">
-                            
                             <div class="flower-grid-body">
-                                <h6 class="fw-bold text-dark mb-1 text-truncate-2">${f.name}</h6>
+                                <h6 class="fw-bold text-dark mb-1">${f.name}</h6>
                                 <div><span class="badge ${cfg.badge}" style="font-size:0.7rem;">${f.tier}</span></div>
-                                <div class="mt-2 text-success small fw-bold">Tổng: ${owners.length} người sở hữu</div>
+                                <div class="mt-2 text-success small fw-bold">Tổng: ${owners.length} người</div>
                             </div>
-                            
                             <div class="flower-grid-footer">
                                 ${owners.map(o => `
                                     <span class="member-tag">
@@ -527,7 +576,6 @@
             saveData(); alert('Cập nhật vườn hoa cá nhân thành công!');
         });
 
-        // HỘI TRƯỞNG QUẢN LÝ THÀNH VIÊN VÀ CẤP HOA HỘ
         function renderAdminMembers() {
             const tbody = document.getElementById('adminMembersTableBody'); tbody.innerHTML = '';
             const members = DB.members[currentGroupId] || [];
@@ -556,7 +604,6 @@
             });
         }
 
-        // YÊU CẦU 2: KÍCH HOẠT GIAO DIỆN CHỌN HOA HỘ CHO THÀNH VIÊN KHÁC
         window.openLeaderAssign = function(targetPhone, targetName) {
             document.getElementById('assignTargetName').textContent = targetName;
             document.getElementById('assignTargetPhone').value = targetPhone;
@@ -574,14 +621,13 @@
                     <div class="d-flex align-items-center p-1 border-bottom bg-white">
                         <input class="form-check-input me-2 leader-assign-cb" type="checkbox" value="${f.id}" id="assign-cb-${f.id}" ${isChecked}>
                         <img src="${f.img}" width="30" height="30" style="object-fit:cover; border-radius:4px;" class="me-2">
-                        <label class="form-check-label small text-dark text-truncate" for="assign-cb-${f.id}">
+                        <label class="form-check-label small text-dark" for="assign-cb-${f.id}">
                             ${f.name}
                         </label>
                     </div>`;
             });
 
             document.getElementById('leaderAssignSection').classList.remove('d-none');
-            window.scrollTo({ top: document.getElementById('leaderAssignSection').offsetTop - 80, behavior: 'smooth' });
         }
 
         window.cancelLeaderAssignment = function() {
@@ -589,7 +635,6 @@
             document.getElementById('assignTargetPhone').value = "";
         }
 
-        // HỘI TRƯỞNG ẤN LƯU HOA HỘ THÀNH VIÊN
         window.saveLeaderAssignment = function() {
             const targetPhone = document.getElementById('assignTargetPhone').value;
             if(!targetPhone) return;
@@ -601,7 +646,7 @@
             if(targetUser) {
                 targetUser.ownedFlowers = selected;
                 saveData();
-                alert(`Đã cập nhật thay đổi hoa hộ cho thành viên thành công!`);
+                alert(`Đã cập nhật thay đổi hoa hộ thành công!`);
                 cancelLeaderAssignment();
                 renderAdminMembers();
             }
@@ -632,7 +677,6 @@
             }
         }
 
-        // SAO LƯU DỰ PHÒNG
         function exportDataSystem() {
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(DB));
             const downloadAnchor = document.createElement('a');
