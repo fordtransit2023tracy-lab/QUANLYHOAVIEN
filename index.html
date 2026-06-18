@@ -45,8 +45,8 @@
     <div id="loginSection" class="container" style="max-width: 500px; margin-top: 50px;">
         <div class="card p-4 shadow mb-4 text-center bg-white">
             <i class="bi bi-flower2 text-success" style="font-size: 3rem;"></i>
-            <h4 class="mt-2 fw-bold text-success">LIÊN MINH HOA VIÊN V5.0</h4>
-            <p class="text-muted small mb-0"><i class="bi bi-cloud-check-fill text-primary"></i> Đang kết nối Cơ sở dữ liệu đám mây toàn quốc</p>
+            <h4 class="mt-2 fw-bold text-success">LIÊN MINH HOA VIÊN</h4>
+            <p class="text-muted small mb-0"><i class="bi bi-cloud-check-fill text-primary"></i> Quản lý hoa viên của Bạn </p>
         </div>
 
         <div class="row g-3">
@@ -55,7 +55,7 @@
                     <h6 class="fw-bold text-primary mb-1"><i class="bi bi-cpu-fill"></i> ADMIN TỐI CAO</h6>
                     <form id="superLoginForm" class="row g-2">
                         <div class="col-8">
-                            <input type="tel" id="superPhone" class="form-control form-control-sm" placeholder="Mặc định: 0999999999" required>
+                            <input type="tel" id="superPhone" class="form-control form-control-sm" placeholder="Ví dụ 000" required>
                         </div>
                         <div class="col-4">
                             <button type="submit" class="btn btn-primary btn-sm w-100 fw-bold">Vào Quản Trị</button>
@@ -185,7 +185,7 @@
         <div class="container-fluid px-2 mt-4">
             <ul class="nav nav-pills nav-fill gap-2 p-1 bg-white rounded-pill shadow-sm mb-4" style="max-width: 750px; margin: 0 auto;" id="clanTabHeader" role="tablist">
                 <li class="nav-item">
-                    <button class="nav-link active rounded-pill" id="tab-stats-btn" data-bs-toggle="pill" data-bs-target="#panel-stats" type="button" onclick="renderStats()"><i class="bi bi-grid-3x3-gap-fill me-1"></i> Danh Sách Lưới (6 Ô Ngang)</button>
+                    <button class="nav-link active rounded-pill" id="tab-stats-btn" data-bs-toggle="pill" data-bs-target="#panel-stats" type="button" onclick="renderStats()"><i class="bi bi-grid-3x3-gap-fill me-1"></i> Danh Sách Hoa viên của Hội </button>
                 </li>
                 <li class="nav-item">
                     <button class="nav-link rounded-pill" id="tab-myflower-btn" data-bs-toggle="pill" data-bs-target="#panel-myflower" type="button" onclick="initMyFlowerSelection()"><i class="bi bi-check2-circle me-1"></i> Hoa Tôi Sở Hữu</button>
@@ -199,7 +199,7 @@
                 <div class="tab-pane fade show active" id="panel-stats" role="tabpanel">
                     <div class="flower-container-centered">
                         <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3 px-1">
-                            <h5 class="fw-bold text-success mb-0"><i class="bi bi-flower3"></i> KHÔNG GIAN HOA VIÊN SỞ HỮU TRONG HỘI</h5>
+                            <h5 class="fw-bold text-success mb-0"><i class="bi bi-flower3"></i> KHÔNG GIAN HOA VIÊN CỦA HỘI </h5>
                             <div class="input-group input-group-sm" style="max-width: 300px;">
                                 <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-success"></i></span>
                                 <input type="text" id="gridSearchFlower" class="form-control border-start-0" placeholder="Tìm tên hoa trong hội sở hữu..." oninput="renderStats()">
