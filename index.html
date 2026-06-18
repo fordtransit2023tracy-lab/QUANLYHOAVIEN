@@ -14,23 +14,19 @@
         
         /* Định dạng khung lưới hoa chiếm 2/3 và canh giữa màn hình */
         .flower-container-centered {
-            max-width: 1000px;
+            max-width: 1200px;
             margin-left: auto;
             margin-right: auto;
         }
 
         /* KHU VỰC CUỘN ĐỘC LẬP */
-        /* 1. Thanh cuộn cho lưới hoa chính của Hội viên */
         .grid-scroll-zone {
-            max-height: 70vh;
+            max-height: 65vh;
             overflow-y: auto;
             padding-right: 5px;
         }
-        /* 2. Thanh cuộn cho danh mục hoa của Admin */
         .admin-flower-table-wrapper { max-height: 400px; overflow-y: auto; }
-        /* 3. Thanh cuộn cho danh mục Hội của Admin */
         .admin-group-table-wrapper { max-height: 320px; overflow-y: auto; }
-        /* 4. Thanh cuộn cho danh sách Thành viên của Hội trưởng */
         .leader-member-table-wrapper { max-height: 480px; overflow-y: auto; }
 
         /* Cấu trúc lưới hoa tối ưu cho 6 ô ngang */
@@ -68,7 +64,7 @@
         <div class="card p-4 shadow mb-4 text-center bg-white">
             <i class="bi bi-flower2 text-success" style="font-size: 3rem;"></i>
             <h4 class="mt-2 fw-bold text-success">LIÊN MINH HOA VIÊN</h4>
-            <p class="text-muted small mb-0">Quản lý hoa viên của bạn</p>
+            <p class="text-muted small mb-0">Đồng bộ Hội - Quản lý hoa viên của bạn</p>
         </div>
 
         <div class="row g-3">
@@ -214,7 +210,7 @@
         <div class="container-fluid px-2 mt-4">
             <ul class="nav nav-pills nav-fill gap-2 p-1 bg-white rounded-pill shadow-sm mb-4" style="max-width: 750px; margin: 0 auto;" id="clanTabHeader" role="tablist">
                 <li class="nav-item">
-                    <button class="nav-link active rounded-pill" id="tab-stats-btn" data-bs-toggle="pill" data-bs-target="#panel-stats" type="button" onclick="renderStats()"><i class="bi bi-grid-3x3-gap-fill me-1"></i> Danh Sách Lưới (6 Ô Ngang)</button>
+                    <button class="nav-link active rounded-pill" id="tab-stats-btn" data-bs-toggle="pill" data-bs-target="#panel-stats" type="button" onclick="renderStats()"><i class="bi bi-grid-3x3-gap-fill me-1"></i> Danh Sách Hoa </button>
                 </li>
                 <li class="nav-item">
                     <button class="nav-link rounded-pill" id="tab-myflower-btn" data-bs-toggle="pill" data-bs-target="#panel-myflower" type="button" onclick="initMyFlowerSelection()"><i class="bi bi-check2-circle me-1"></i> Hoa Tôi Sở Hữu</button>
@@ -227,9 +223,14 @@
             <div class="tab-content">
                 <div class="tab-pane fade show active" id="panel-stats" role="tabpanel">
                     <div class="flower-container-centered">
-                        <div class="mb-3 px-1 text-center">
-                            <h4 class="fw-bold text-success mb-1"><i class="bi bi-flower3"></i> KHÔNG GIAN HOA VIÊN </h4>
+                        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3 px-1">
+                            <h5 class="fw-bold text-success mb-0"><i class="bi bi-flower3"></i> KHÔNG GIAN HOA VIÊN CỦA TRONG HỘI</h5>
+                            <div class="input-group input-group-sm" style="max-width: 300px;">
+                                <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-success"></i></span>
+                                <input type="text" id="gridSearchFlower" class="form-control border-start-0" placeholder="Tìm tên hoa trong hội sở hữu..." oninput="renderStats()">
+                            </div>
                         </div>
+                        
                         <div class="grid-scroll-zone">
                             <div class="row g-2" id="flowerGridContainer"></div>
                         </div>
@@ -383,7 +384,6 @@
             return { class: 'tier-tim', badge: 'badge-tim', weight: 3 };
         }
 
-        // HÀM QUAN TRỌNG: Sắp xếp mảng hoa theo thứ tự Đỏ -> Cam -> Tím
         function sortFlowersByTier(flowerArray) {
             return [...flowerArray].sort((a, b) => {
                 return getTierClass(a.tier).weight - getTierClass(b.tier).weight;
@@ -536,12 +536,10 @@
             document.getElementById('fPreview').style.display = "none";
         });
 
-        /* ADMIN: DANH MỤC HOA ĐÃ SẮP XẾP ĐỎ -> CAM -> TÍM */
         function renderSuperAdminFlowers() {
             const tbody = document.getElementById('superAdminFlowerTable'); tbody.innerHTML = '';
             const keyword = document.getElementById('adminSearchFlower').value.trim().toLowerCase();
 
-            // Sắp xếp tổng danh mục trước khi hiển thị lọc
             const sortedGlobal = sortFlowersByTier(DB.globalFlowers);
             const filteredFlowers = sortedGlobal.filter(f => f.name.toLowerCase().includes(keyword));
 
@@ -598,17 +596,29 @@
             document.getElementById('superLoginForm').reset(); document.getElementById('userLoginForm').reset();
             document.getElementById('adminSearchFlower').value = "";
             document.getElementById('memberSearchFlower').value = "";
+            document.getElementById('gridSearchFlower').value = "";
         }
 
-        /* LƯỚI HOA CHÍNH: ĐÃ ĐƯỢC SẮP XẾP THEO BẬC ĐỎ -> CAM -> TÍM */
+        /* LƯỚI HOA CHÍNH: TÍCH HỢP TÌM KIẾM + CHỈ HIỂN THỊ HOA ĐƯỢC THÀNH VIÊN SỞ HỮU */
         window.renderStats = function() {
             const container = document.getElementById('flowerGridContainer'); container.innerHTML = '';
             const members = DB.members[currentGroupId] || [];
+            const keyword = document.getElementById('gridSearchFlower').value.trim().toLowerCase();
 
-            // Áp dụng bộ sắp xếp phân cấp bậc hoa
+            // 1. Sắp xếp phân cấp bậc hoa
             const sortedFlowers = sortFlowersByTier(DB.globalFlowers);
 
-            sortedFlowers.forEach(f => {
+            // 2. Lọc: Chỉ giữ lại hoa thỏa mãn từ khóa tìm kiếm VÀ có ít nhất 1 thành viên trong hội sở hữu
+            const filteredAndOwnedFlowers = sortedFlowers.filter(f => {
+                const matchesKeyword = f.name.toLowerCase().includes(keyword);
+                const ownersCount = members.filter(m => m.ownedFlowers && m.ownedFlowers.includes(f.id)).length;
+                
+                // Điều kiện quyết định: Phải có tên khớp từ khóa VÀ số người sở hữu > 0
+                return matchesKeyword && ownersCount > 0;
+            });
+
+            // 3. Tiến hành vẽ giao diện lưới hoa
+            filteredAndOwnedFlowers.forEach(f => {
                 const owners = members.filter(m => m.ownedFlowers && m.ownedFlowers.includes(f.id));
                 const cfg = getTierClass(f.tier);
 
@@ -626,20 +636,27 @@
                                     <span class="member-tag">
                                         ${o.name} <span class="badge ${getRoleBadgeClass(o.role)} role-badge">${o.role[0]}</span>
                                     </span>
-                                `).join('') || '<div class="text-muted text-center small py-1" style="font-size:0.65rem;">Trống vườn</div>'}
+                                `).join('')}
                             </div>
                         </div>
                     </div>`;
             });
+
+            // Hiển thị thông báo nếu không tìm thấy hoặc chưa có ai có hoa nào
+            if(filteredAndOwnedFlowers.length === 0) {
+                container.innerHTML = `
+                    <div class="col-12 text-center text-muted py-5">
+                        <i class="bi bi-flower1 fs-2 d-block text-secondary mb-2"></i>
+                        <span>Không có hoa nào được sở hữu phù hợp với tìm kiếm hiện tại.</span>
+                    </div>`;
+            }
         }
 
-        /* TAB KHO SỞ HỮU: SẮP XẾP ĐỎ -> CAM -> TÍM + CÓ THANH TÌM KIẾM VÀ CUỘN ĐỘC LẬP */
         window.initMyFlowerSelection = function() {
             const container = document.getElementById('myFlowersListContainer'); container.innerHTML = '';
             const owned = currentUser.ownedFlowers || [];
             const keyword = document.getElementById('memberSearchFlower').value.trim().toLowerCase();
 
-            // Sắp xếp phân cấp trước khi lọc tìm kiếm
             const sortedFlowers = sortFlowersByTier(DB.globalFlowers);
             const filteredFlowers = sortedFlowers.filter(f => f.name.toLowerCase().includes(keyword));
 
@@ -708,7 +725,6 @@
             });
         }
 
-        /* HỘI TRƯỞNG: DANH SÁCH SỬA HOA HỘ ĐƯỢC SẮP XẾP THEO BẬC ĐỎ -> CAM -> TÍM */
         window.openLeaderAssign = function(targetPhone, targetName) {
             document.getElementById('assignTargetName').textContent = targetName;
             document.getElementById('assignTargetPhone').value = targetPhone;
@@ -720,7 +736,6 @@
             const listContainer = document.getElementById('leaderAssignList');
             listContainer.innerHTML = '';
 
-            // Sắp xếp phân cấp bậc hoa
             const sortedFlowers = sortFlowersByTier(DB.globalFlowers);
 
             sortedFlowers.forEach(f => {
