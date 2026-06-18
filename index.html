@@ -591,11 +591,26 @@ const firebaseConfig = {
             document.getElementById('currentGroupName').textContent = DB.groups[currentGroupId].name;
             document.getElementById('userRoleBadge').textContent = currentUser.role;
 
+            // KIỂM TRA PHÂN QUYỀN: Chỉ Hội trưởng và Hội phó mới thấy menu quản lý
             const isLeader = (currentUser.role === 'Hội trưởng' || currentUser.role === 'Hội phó');
-            document.querySelectorAll('.id-leader-only').forEach(el => { isLeader ? el.classList.remove('d-none') : el.classList.add('d-none'); });
+            
+            // Xử lý ẩn/hiện nút bấm trên thanh Tab Header và cả nội dung Panel bên dưới
+            document.querySelectorAll('.id-leader-only').forEach(el => { 
+                if (isLeader) {
+                    el.classList.remove('d-none');
+                } else {
+                    el.classList.add('d-none');
+                }
+            });
+            
             cancelLeaderAssignment();
 
-            bootstrap.Tab.getOrCreateInstance(document.querySelector('#clanTabHeader button[data-bs-target="#panel-stats"]')).show();
+            // Kích hoạt mặc định quay về tab đầu tiên một cách an toàn
+            const firstTabBtn = document.querySelector('#tab-stats-btn');
+            if (firstTabBtn) {
+                const tabTrigger = new bootstrap.Tab(firstTabBtn);
+                tabTrigger.show();
+            }
             renderStats();
         });
 
